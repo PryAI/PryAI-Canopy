@@ -70,3 +70,13 @@ pip install -r requirements.txt
 
 # 3. Execute a aplicação
 streamlit run app.py
+```
+
+---
+
+🎓 Sobre
+O PryAI Canopy foi desenvolvido por Pedro, graduando em Engenharia Florestal pela Universidade Federal do Paraná (UFPR).
+
+Este software faz parte do ecossistema PryAI, uma iniciativa focada em unir inteligência computacional, automação e ciência de dados para elevar o nível técnico e a eficiência do setor florestal brasileiro.
+
+Licença MIT - Open Source Software
