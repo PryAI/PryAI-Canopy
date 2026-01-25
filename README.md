@@ -5,11 +5,9 @@
 ![Status](https://img.shields.io/badge/Status-Production-success)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-> **Inteligência Computacional e Blindagem de Dados para Modelagem Biométrica Florestal.**
+> **Modelagem Biométrica Florestal de Alta Precisão com Flexibilidade Total.**
 
-O **PryAI Canopy** é uma ferramenta desenvolvida para trazer segurança e precisão ao processamento de inventários florestais. Seu foco é transformar dados brutos de campo em modelos matemáticos confiáveis e relatórios técnicos padronizados.
-
-Projetado para a realidade do trabalho de campo, o sistema conta com o **PryAI Shield™**, um motor de tratamento de dados que assegura que inconsistências de digitação ou formatação não comprometam a análise estatística.
+O **PryAI Canopy** é uma ferramenta desenvolvida para trazer segurança, agilidade e precisão ao processamento de inventários florestais. O software transforma dados brutos de campo em modelos matemáticos confiáveis, oferecendo controle total ao engenheiro sobre o ajuste e a validação das equações.
 
 ---
 
@@ -21,48 +19,46 @@ Utilize a versão estável hospedada na nuvem:
 
 ---
 
-## 🛡️ Recurso Exclusivo: PryAI Shield™
+## ⚡ Funcionalidades Principais
 
-Para garantir a integridade dos modelos ajustados, o módulo de processamento (`src/parser.py`) implementa camadas automáticas de validação:
+### 1. Modelagem Flexível & Dualidade de Ajuste
+O sistema oferece total liberdade através do **PryAI Interpreter**, permitindo que o usuário decida como o modelo deve ser construído:
+* **Sintaxe Livre:** Suporte para equações lineares e não-lineares personalizadas. Ex: `ln(Y) = b0 + b1*ln(DAP)`.
+* **Ajuste Automático (OLS):** O motor estatístico analisa sua base de dados e gera instantaneamente os melhores coeficientes.
+* **Ajuste Manual:** O usuário tem a opção de inserir manualmente seus próprios coeficientes (b0, b1, b2...). Ideal para testar equações de literatura ou validar modelos pré-existentes sobre novos dados de campo.
+* **Biblioteca de Equações:** Salve e carregue modelos recorrentes (Spurr, Schumacher, Hipsométricos) para agilizar o fluxo de trabalho.
 
-* **Normalização de Decimais:** Identificação e padronização automática de arquivos que utilizam vírgula (padrão BR) ou ponto (padrão US), garantindo a leitura correta dos valores.
-* **Limpeza Semântica:** Tratamento inteligente de colunas numéricas. Células contendo textos acidentais (ex: "Vinte", "Erro", "S/D") são identificadas e convertidas para valores nulos, sendo filtradas antes do cálculo para evitar inconsistências.
-* **Segurança Matemática:** Verificação prévia de operações (como logaritmos), impedindo o processamento de valores matematicamente inválidos (zeros ou negativos) e garantindo a estabilidade do ajuste OLS.
+### 2. Diagnóstico Visual Interativo
+Visualização de dados reativa para uma auditoria completa do comportamento do modelo:
+* **Interatividade:** Gráficos dinâmicos com *tooltips* detalhados (ID, Talhão, Erro) ao passar o mouse.
+* **Análise de Resíduos:** Ferramentas visuais para identificação de tendenciosidades, com destaque para a linha zero e análise de dispersão.
+* **Curvas Suaves (Loess):** Plotagem de tendências biológicas sobrepostas aos dados reais.
+
+### 3. Métricas de Engenharia e Precisão
+Cálculo automático dos indicadores vitais para o rigor técnico do setor florestal:
+* **R² Ajustado:** Coeficiente de determinação para explicação da variância.
+* **Syx %:** Erro Padrão da Estimativa em porcentagem.
+* **Fator de Meyer:** Correção de viés para transformações logarítmicas.
+* **Critérios de Seleção:** AIC, BIC e Teste de Durbin-Watson para análise de autocorrelação.
+
+### 4. Relatórios Técnicos (Laudo em PDF)
+Geração instantânea de um documento profissional pronto para entrega:
+* Resumo estatístico do projeto e metadados.
+* Equação ajustada e coeficientes (gerados ou inseridos).
+* Tabela de métricas formatada e gráficos de diagnóstico em alta resolução.
 
 ---
 
-## ⚡ Funcionalidades
+## 🛡️ Camada de Resiliência: PryAI Shield™
 
-### 1. Modelagem Flexível & Biblioteca
-O sistema oferece total liberdade para o pesquisador e o engenheiro:
-* **Sintaxe Livre:** Suporte para equações lineares e não-lineares personalizadas via **PryAI Interpreter**. Ex: `ln(Y) = b0 + b1*ln(DAP)`.
-* **Biblioteca de Equações:** Permite salvar e carregar modelos recorrentes (Spurr, Schumacher, Hipsométricos) diretamente na sessão de uso.
-
-### 2. Diagnóstico Visual Interativo
-Visualização de dados focada em clareza:
-* **Interatividade:** Gráficos dinâmicos com *tooltips* detalhados (ID, Talhão, Erro) ao passar o mouse.
-* **Análise de Resíduos:** Ferramentas visuais para identificação de tendenciosidades, incluindo destaque da linha zero e análise de dispersão.
-* **Curvas Suaves (Loess):** Plotagem de tendências biológicas sobrepostas aos dados observados.
-
-### 3. Métricas de Engenharia
-Cálculo automático dos principais indicadores de precisão:
-* **R² Ajustado:** Coeficiente de determinação.
-* **Syx %:** Erro Padrão da Estimativa em porcentagem.
-* **Fator de Meyer:** Correção de viés para transformações logarítmicas.
-* **Critérios de Seleção:** AIC, BIC e teste de Durbin-Watson para análise de autocorrelação.
-
-### 4. Relatórios Técnicos
-Geração instantânea de **Relatório em PDF**, contendo:
-* Resumo estatístico do projeto.
-* Equação ajustada e coeficientes.
-* Tabela de métricas formatada.
-* Gráficos de diagnóstico em alta resolução.
+Para garantir a fluidez do uso, o sistema conta com o módulo **PryAI Shield™**, que trata inconsistências comuns de dados:
+* **Normalização de Decimais:** Identifica automaticamente se a planilha utiliza vírgula (BR) ou ponto (US).
+* **Limpeza Semântica:** Detecta textos acidentais em colunas numéricas (ex: "Vinte", "Erro"), filtrando-os para evitar travamentos.
+* **Segurança Matemática:** Bloqueio proativo de cálculos inválidos (como logaritmos de zero ou negativos).
 
 ---
 
 ## 🛠️ Instalação Local (Para Desenvolvedores)
-
-Caso deseje executar a aplicação em ambiente local:
 
 ```bash
 # 1. Clone o repositório
