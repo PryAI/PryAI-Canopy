@@ -51,6 +51,9 @@ def init_session_state():
     # Garante que a chave do input exista para evitar o erro de widget
     if 'model_name_input' not in st.session_state: st.session_state['model_name_input'] = ""
     
+    # CONTROLE MANUAL (ADICIONADO)
+    if 'manual_coef_count' not in st.session_state: st.session_state['manual_coef_count'] = 1
+    
     # NOVA BIBLIOTECA DE EQUAÇÕES (Já vem com algumas clássicas)
     if 'equation_library' not in st.session_state:
         st.session_state['equation_library'] = {
@@ -85,19 +88,17 @@ def auditar_qualidade_dados(df):
     numeric_cols = df.select_dtypes(include=[np.number]).columns
     
     for col in numeric_cols:
-        # 1. Checar Valores Nulos (que podem ter sido textos como "Vinte" removidos pelo parser)
+        # 1. Checar Valores Nulos
         n_nans = df[col].isna().sum()
         if n_nans > 0:
             report["critical"].append(f"Coluna **'{col}'**: Possui {n_nans} linhas vazias ou com texto inválido (ex: 'Vinte', Datas).")
 
-        # 2. Checar Valores <= 0 (Fisicamente impossível para DAP/Altura)
-        # Ignoramos NaNs aqui para não duplicar aviso
+        # 2. Checar Valores <= 0
         n_zeros = (df[col] <= 0).sum()
         if n_zeros > 0:
             report["critical"].append(f"Coluna **'{col}'**: Possui {n_zeros} valores negativos ou zero (impossível para medidas físicas).")
             
-        # 3. Checar Outliers Extremos (Alienígenas)
-        # Usamos IQR x 3 (Critério bem frouxo, só pega absurdo mesmo)
+        # 3. Checar Outliers Extremos
         valid_data = df[col].dropna()
         if len(valid_data) > 10:
             Q1 = valid_data.quantile(0.25)
@@ -120,7 +121,6 @@ def load_data(uploaded_file):
     try:
         if uploaded_file.name.endswith('.csv'): df = pd.read_csv(uploaded_file)
         else: df = pd.read_excel(uploaded_file)
-        # O preprocessamento já limpa textos ruins transformando em NaN
         return initial_preprocess(df)
     except Exception as e:
         st.error(f"Erro ao ler arquivo: {e}")
@@ -199,25 +199,17 @@ with st.sidebar:
 if st.session_state['df_raw'] is not None:
     
     # --- NOVO: PAINEL DE INTEGRIDADE DE DADOS ---
-    # Mostra avisos ANTES das abas para garantir que o usuário veja
     report = st.session_state.get('audit_report')
     if report and not report['clean']:
         with st.expander("⚠️ **Relatório de Integridade da Planilha (Verifique Antes de Prosseguir)**", expanded=True):
             st.markdown("O **PryAI** detectou inconsistências que podem afetar a precisão do seu modelo.")
-            
-            # Mostra Erros Críticos (Vermelho)
             if report['critical']:
                 st.error("⛔ **Erros Críticos detectados (Corrija na planilha original):**")
-                for msg in report['critical']:
-                    st.markdown(f"- {msg}")
-            
-            # Mostra Avisos (Amarelo)
+                for msg in report['critical']: st.markdown(f"- {msg}")
             if report['warning']:
                 st.warning("⚠️ **Alertas de Atenção (Valores suspeitos/Outliers):**")
-                for msg in report['warning']:
-                    st.markdown(f"- {msg}")
-            
-            st.info("💡 **Nota:** O sistema tentará blindar o modelo ignorando essas linhas automaticamente se você prosseguir, mas recomenda-se corrigir a fonte.")
+                for msg in report['warning']: st.markdown(f"- {msg}")
+            st.info("💡 **Nota:** O sistema tentará blindar o modelo ignorando essas linhas automaticamente se você prosseguir.")
     
     # --------------------------------------------
 
@@ -258,70 +250,48 @@ if st.session_state['df_raw'] is not None:
 
         # 2. Equação e Método
         
-        # --- NOVIDADE: BIBLIOTECA DE EQUAÇÕES ---
         col_lib, col_save = st.columns([3, 1])
         with col_lib:
             eq_options = ["Personalizada..."] + list(st.session_state['equation_library'].keys())
             selected_eq = st.selectbox("📂 Carregar Equação da Biblioteca:", eq_options)
         
-        # Lógica para preencher o campo se selecionar da biblioteca
         default_eq = ""
         if selected_eq != "Personalizada...":
             default_eq = st.session_state['equation_library'][selected_eq]
-            # Atualiza o nome do modelo na sessão
             st.session_state['model_name_input'] = selected_eq 
 
-        # CORREÇÃO AQUI: Removemos 'value=' pois 'key=' já faz o binding com st.session_state
         model_name = st.text_input("Nome do Modelo:", key="model_name_input", placeholder="Ex: Schumacher-Hall Sítio A")
         
-        # Se tiver selecionado algo, usa como value, senão deixa o usuário digitar
         if selected_eq != "Personalizada...":
             equation_input = st.text_input("Equação:", value=default_eq)
         else:
             equation_input = st.text_input("Equação:", placeholder=f"Ex: ln({y_alias}) = b0 + b1*ln(DAP) + b2*ln(HT)")
 
-        # Botão para SALVAR na biblioteca
         with col_save:
-            st.write("") # Espaço para alinhar
+            st.write("") 
             st.write("") 
             if st.button("💾 Salvar na Bibl."):
                 if model_name and equation_input:
                     st.session_state['equation_library'][model_name] = equation_input
                     st.success(f"Salvo!")
-                    st.rerun() # Atualiza a lista
+                    st.rerun() 
                 else:
                     st.warning("Nome e Equação necessários.")
 
-        # --- SINTAXE DETALHADA ---
         with st.expander("📚 Guia de Sintaxe & Exemplos"):
             st.markdown("""
-            **Operadores Matemáticos:**
-            | Operação | Símbolo | Exemplo |
-            | :--- | :---: | :--- |
-            | Adição | `+` | `b0 + b1` |
-            | Subtração | `-` | `Y - Y_pred` |
-            | Multiplicação | `*` | `b1 * DAP` |
-            | Divisão | `/` | `1 / DAP` |
-            | Potência | `**` | `DAP ** 2` (DAP ao quadrado) |
-
-            **Funções:**
-            * `ln(x)`: Logaritmo Natural (Base e)
-            * `log(x)`: Logaritmo Natural (Alias para ln)
-            * `exp(x)`: Exponencial ($e^x$)
-            * `sqrt(x)`: Raiz Quadrada
-
-            **Exemplos para Copiar:**
-            * **Schumacher-Hall:** `ln(Y) = b0 + b1*ln(DAP) + b2*ln(HT)`
-            * **Spurr (Variável Combinada):** `Y = b0 + b1 * (DAP**2 * HT)`
-            * **Polinomial:** `Y = b0 + b1*DAP + b2*(DAP**2)`
-            * **Hipsométrica:** `ln(HT) = b0 + b1 * (1/DAP)`
+            **Operadores:** `+`, `-`, `*`, `/`, `**` | **Funções:** `ln()`, `log()`, `exp()`, `sqrt()`
             """)
 
         method = st.radio("Método:", ["🤖 Automático (OLS)", "✍️ Manual"], horizontal=True)
 
-        # Botão Calcular
-        if st.button("🚀 Calcular Modelo", type="primary"):
-            if method.startswith("🤖"):
+        # ======================================================
+        # LÓGICA DE CÁLCULO (AQUI FOI ALTERADO PARA INCLUIR MANUAL)
+        # ======================================================
+        
+        # MODO AUTOMÁTICO
+        if method.startswith("🤖"):
+            if st.button("🚀 Calcular Modelo", type="primary"):
                 if not equation_input: st.warning("Digite a equação.")
                 else:
                     with st.spinner("Processando..."):
@@ -335,14 +305,75 @@ if st.session_state['df_raw'] is not None:
                             res['y_col_name'] = y_col
                             st.session_state['last_results'] = res
                             st.session_state['chart_key'] += 1
-            else:
-                coefs = extract_coefficients_from_formula(equation_input)
-                if not coefs: st.warning("Sem coeficientes (b0, b1...).")
-                else:
-                    st.session_state['manual_mode_trigger'] = True 
-                    st.warning("Para o modo manual completo, use a interface de input abaixo.")
+        
+        # MODO MANUAL (ADICIONADO AQUI)
+        else:
+            st.markdown("#### 🔢 Entrada de Coeficientes")
+            
+            # Botões + e -
+            col_b1, col_b2, col_dump = st.columns([1, 1, 3])
+            with col_b1:
+                if st.button("➕ Adicionar Coeficiente"): st.session_state['manual_coef_count'] += 1
+            with col_b2:
+                if st.button("➖ Remover"): 
+                    if st.session_state['manual_coef_count'] > 0: st.session_state['manual_coef_count'] -= 1
+            
+            # Loop dos inputs
+            coefs_manual = {}
+            if st.session_state['manual_coef_count'] > 0:
+                cols_b = st.columns(min(4, st.session_state['manual_coef_count']))
+                for i in range(st.session_state['manual_coef_count']):
+                    with cols_b[i % 4]:
+                        val = st.number_input(f"b{i}", value=0.0, format="%.6f", key=f"manual_b{i}")
+                        coefs_manual[f"b{i}"] = val
 
-        # 3. Resultados
+            if st.button("🚀 Validar Manual", type="primary"):
+                if not equation_input:
+                    st.warning("Digite a equação.")
+                else:
+                    # 1. Calcula a predição manual
+                    y_pred_man, err = calculate_manual_prediction(df_work, equation_input, alias_map, coefs_manual)
+                    
+                    if err:
+                        st.error(err)
+                    else:
+                        # 2. Calcula as métricas (Syx, RMSE) para preencher a tabela existente
+                        y_obs = df_work[y_col].values
+                        # Limpa NaNs se houver incompatibilidade de tamanho (segurança)
+                        if len(y_pred_man) != len(y_obs):
+                             st.error("Erro de dimensionalidade. Verifique filtros.")
+                        else:
+                            # Métricas Básicas
+                            ss_res = np.sum((y_obs - y_pred_man) ** 2)
+                            ss_tot = np.sum((y_obs - np.mean(y_obs)) ** 2)
+                            r2_man = 1 - (ss_res / ss_tot)
+                            rmse_man = np.sqrt(np.mean((y_obs - y_pred_man) ** 2))
+                            syx_man = (rmse_man / np.mean(y_obs)) * 100
+                            
+                            # Prepara o dicionário 'res' igual ao do OLS para o código de baixo ler
+                            res_man = {
+                                'name': model_name or "Manual",
+                                'equation_fitted': f"Manual: {equation_input}", # Mostra a equação usada
+                                'r2_adj': r2_man,
+                                'rmse': rmse_man,
+                                'syx_pct': syx_man,
+                                'fc_meyer': None, # Não aplicável direto
+                                'aic': 0, # Não calculamos AIC em manual simples
+                                'durbin_watson': 0,
+                                'is_log': "ln(" in equation_input.split("=")[0],
+                                'y_col_real': y_col,
+                                'alias_map_used': alias_map,
+                                'data_points': {
+                                    'y_real': y_obs.tolist(),
+                                    'y_pred': y_pred_man.tolist()
+                                }
+                            }
+                            st.session_state['last_results'] = res_man
+                            st.session_state['chart_key'] += 1
+
+        # ==============================================================================
+        # 3. RESULTADOS (ESTE BLOCO É O ORIGINAL QUE VOCÊ QUERIA DE VOLTA)
+        # ==============================================================================
         results = st.session_state['last_results']
         
         if results:
