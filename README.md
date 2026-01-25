@@ -16,10 +16,15 @@ O **PryAI Canopy** é uma aplicação web desenvolvida para processamento estat�
     * Teste de Durbin-Watson
 * **📄 Relatórios Profissionais:** Geração automática de relatórios em PDF com as equações ajustadas, coeficientes e gráficos de resíduos.
 
+## 📁 Dados de Teste
+
+Para testar as funcionalidades de **Blindagem e Auditoria**, você pode baixar nossa planilha de exemplo com 500+ linhas e erros propositais:
+* [📥 Baixar Planilha de Teste (Excel)](https://github.com/PryAI/PryAI-Canopy/raw/main/data/PLANILHA_TESTE.xlsx)
+
 ## 🛠️ Instalação e Uso
 
 ### Opção 1: Acesso Online
-Acesse a versão hospedada no Streamlit Cloud: [Acesse o App aqui](https://pryai-canopy.streamlit.app) *(Link a ser confirmado após o Deploy)*
+Acesse a versão hospedada no Streamlit Cloud: [Acesse o App aqui](https://pryai-canopy.streamlit.app)
 
 ### Opção 2: Execução Local
 
@@ -52,4 +57,4 @@ Acesse a versão hospedada no Streamlit Cloud: [Acesse o App aqui](https://pryai
 Desenvolvido por **Pedro** (Graduando em Engenharia Florestal - UFPR) como parte do ecossistema **PryAI**, focado em trazer inteligência computacional e automação para o setor florestal.
 
 ---
-*Licença MIT - Open Source*
+**Licença MIT - Open Source**
