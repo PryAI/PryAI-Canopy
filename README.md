@@ -26,8 +26,8 @@ Utilize a versão estável hospedada na nuvem:
 A verdadeira inteligência do Canopy está no que você não vê. O módulo de processamento (`src/parser.py`) atua como um "firewall" estatístico:
 
 * **Detecção Universal de Decimais:** O sistema identifica automaticamente se a planilha está no padrão brasileiro (vírgula) ou americano (ponto) e normaliza os dados sem intervenção do usuário.
-* **Limpeza Semântica:** Textos acidentais em colunas numéricas (ex: "Vinte", "Erro", "S/D") são convertidos e tratados, evitando o crash da aplicação.
-* **Proteção Matemática:** Bloqueio proativo de operações ilegais (como `ln(0)` ou números negativos em transformações logarítmicas), garantindo a integridade do ajuste OLS.
+* **Limpeza Semântica:** Textos acidentais em colunas numéricas (ex: "Vinte", "Erro", "S/D") são detectados, convertidos para nulo e filtrados automaticamente, garantindo que apenas dados válidos entrem no cálculo.
+* **Proteção Matemática:** Bloqueio proativo de operações ilegais (como `ln(0)` ou números negativos em transformações logarítmicas), garantindo a integridade matemática do ajuste OLS.
 
 ---
 
