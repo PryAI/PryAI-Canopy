@@ -19,14 +19,14 @@ O **PryAI Canopy** é uma aplicação web desenvolvida para processamento estat�
 ## 🛠️ Instalação e Uso
 
 ### Opção 1: Acesso Online
-Acesse a versão hospedada no Streamlit Cloud: [Cole o Link do seu App Aqui depois de subir]
+Acesse a versão hospedada no Streamlit Cloud: [Acesse o App aqui](https://pryai-canopy.streamlit.app) *(Link a ser confirmado após o Deploy)*
 
 ### Opção 2: Execução Local
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU_USUARIO/pryai-canopy.git](https://github.com/SEU_USUARIO/pryai-canopy.git)
-    cd pryai-canopy
+    git clone [https://github.com/PryAI/PryAI-Canopy.git](https://github.com/PryAI/PryAI-Canopy.git)
+    cd PryAI-Canopy
     ```
 
 2.  **Instale as dependências:**
