@@ -26,7 +26,7 @@ DB_PATH = ROOT_DIR / DB_NAME
 # 2. Configurações da Interface Gráfica (GUI)
 # ==============================================================================
 APP_NAME = "PryAI Canopy"
-APP_VERSION = "2.0.0 (Open Source)"
+APP_VERSION = "1.0.0 (Open Source)"
 WINDOW_SIZE = "1100x700"
 
 # Cores e Temas (CustomTkinter)
@@ -39,4 +39,5 @@ COLOR_THEME = "green"   # "blue", "green", "dark-blue"
 def init_directories():
     """Cria as pastas necessárias se elas não existirem."""
     for folder in [DATA_DIR, OUTPUT_DIR, ASSETS_DIR]:
+
         folder.mkdir(parents=True, exist_ok=True)
