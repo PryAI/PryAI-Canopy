@@ -62,7 +62,7 @@ Para garantir a fluidez do uso, o sistema conta com o módulo **PryAI Shield™*
 
 ```bash
 # 1. Clone o repositório
-git clone [https://github.com/PryAI/PryAI-Canopy.git](https://github.com/PryAI/PryAI-Canopy.git)
+git clone github.com/PryAI/PryAI-Canopy.git
 cd PryAI-Canopy
 
 # 2. Instale as dependências
