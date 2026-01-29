@@ -30,7 +30,7 @@ def add_bg_from_url():
          <style>
          .stApp {{
              /* Imagem de floresta com sobreposição preta de 90% para ficar bem escuro */
-             background: linear-gradient(rgba(0, 0, 0, 0.90), rgba(0, 0, 0, 0.90)), 
+             background: linear-gradient(rgba(0, 0, 0, 0.90), rgba(0, 0, 0, 0.80)), 
              url("https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=2074&auto=format&fit=crop");
              background-size: cover;
              background-position: center;
@@ -510,3 +510,4 @@ if st.session_state['df_raw'] is not None:
 else:
     st.title(f"Bem-vindo ao {APP_NAME}")
     st.info("Carregue um arquivo para começar.")
+
