@@ -11,19 +11,18 @@ def _extract_dependent_variable(equation: str) -> Tuple[str, bool]:
     if "=" not in equation: raise ValueError("A equação deve conter um sinal de igual '='.")
     eq_left = equation.split("=")[0].strip()
     
-    # --- CORREÇÃO APLICADA AQUI ---
-    # Agora verifica tanto 'ln(' (3 caracteres) quanto 'log(' (4 caracteres)
-    lower_eq = eq_left.lower()
+    # --- CORREÇÃO COM REGEX (Mais robusta) ---
+    # Procura por: ln ou log, seguido opcionalmente por espaços, seguido de (
+    # Captura o que está dentro dos parênteses
+    match = re.search(r'^\s*(?:ln|log)\s*\((.+)\)\s*$', eq_left, re.IGNORECASE)
     
-    if lower_eq.startswith("ln(") and lower_eq.endswith(")"):
-        var_name = eq_left[3:-1].strip()
-        return var_name, True
-    elif lower_eq.startswith("log(") and lower_eq.endswith(")"):
-        var_name = eq_left[4:-1].strip()
+    if match:
+        # Se casou com o padrão log(...) ou ln(...), pega o miolo
+        var_name = match.group(1).strip()
         return var_name, True
     else:
+        # Se não tem log/ln, assume que é a variável direta (Linear)
         return eq_left.strip(), False
-    # ------------------------------
 
 def fit_regression_from_formula(df: pd.DataFrame, equation: str, alias_map: Dict[str, str]) -> Dict[str, Any]:
     """
@@ -210,3 +209,4 @@ def fit_regression_from_formula(df: pd.DataFrame, equation: str, alias_map: Dict
             "y_pred": results.fittedvalues.tolist()
         }
     }
+
