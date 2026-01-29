@@ -88,10 +88,16 @@ def auditar_qualidade_dados(df):
     numeric_cols = df.select_dtypes(include=[np.number]).columns
     
     for col in numeric_cols:
-        # 1. Checar Valores Nulos
-        n_nans = df[col].isna().sum()
-        if n_nans > 0:
-            report["critical"].append(f"Coluna **'{col}'**: Possui {n_nans} linhas vazias ou com texto inválido (ex: 'Vinte', Datas).")
+    # 1. Checar Valores Nulos
+    n_nans = df[col].isna().sum()
+    if n_nans > 0:
+        # Exemplos variados: N/A, Unidades no texto, Datas e Erros de digitação
+        exemplos = "'N/A', 'Vinte', '15m', '20,5 cm', Datas ou '?'"
+        
+        report["critical"].append(
+            f"Coluna **'{col}'**: Possui {n_nans} linhas vazias ou com conteúdo inválido "
+            f"(ex: {exemplos})."
+        )
 
         # 2. Checar Valores <= 0
         n_zeros = (df[col] <= 0).sum()
@@ -485,5 +491,6 @@ if st.session_state['df_raw'] is not None:
 else:
     st.title(f"Bem-vindo ao {APP_NAME}")
     st.info("Carregue um arquivo para começar.")
+
 
 
