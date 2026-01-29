@@ -23,9 +23,31 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# --- NOVO: FUNÇÃO DE FUNDO (Background Dark Forest) ---
+def add_bg_from_url():
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             /* Imagem de floresta com sobreposição preta de 90% para ficar bem escuro */
+             background: linear-gradient(rgba(0, 0, 0, 0.90), rgba(0, 0, 0, 0.90)), 
+             url("https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=2074&auto=format&fit=crop");
+             background-size: cover;
+             background-position: center;
+             background-attachment: fixed;
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
+
+add_bg_from_url()
+# -----------------------------------------------------
+
 st.markdown("""
     <style>
-    .main { background-color: #f9f9f9; }
+    /* Ajustes para manter legibilidade com o fundo novo */
+    .main { background-color: transparent; } 
     .stButton>button { background-color: #2E8B57; color: white; border-radius: 5px; }
     div[data-testid="stMetricValue"] { color: #2E8B57; }
     .stTextInput>div>div>input { font-family: 'Courier New', monospace; }
@@ -51,10 +73,10 @@ def init_session_state():
     # Garante que a chave do input exista para evitar o erro de widget
     if 'model_name_input' not in st.session_state: st.session_state['model_name_input'] = ""
     
-    # CONTROLE MANUAL (ADICIONADO)
+    # CONTROLE MANUAL
     if 'manual_coef_count' not in st.session_state: st.session_state['manual_coef_count'] = 1
     
-    # NOVA BIBLIOTECA DE EQUAÇÕES (Já vem com algumas clássicas)
+    # NOVA BIBLIOTECA DE EQUAÇÕES
     if 'equation_library' not in st.session_state:
         st.session_state['equation_library'] = {
             "Linear Simples": "Y = b0 + b1*DAP",
@@ -80,7 +102,7 @@ def auditar_qualidade_dados(df):
     Não apaga nada, apenas reporta.
     """
     report = {
-        "critical": [], # Erros que impedem cálculo (Texto em nº, Zeros em Log)
+        "critical": [], # Erros que impedem cálculo
         "warning": [],  # Suspeitas (Outliers extremos)
         "clean": True
     }
@@ -201,7 +223,7 @@ with st.sidebar:
 # ==============================================================================
 if st.session_state['df_raw'] is not None:
     
-    # --- NOVO: PAINEL DE INTEGRIDADE DE DADOS ---
+    # --- PAINEL DE INTEGRIDADE DE DADOS ---
     report = st.session_state.get('audit_report')
     if report and not report['clean']:
         with st.expander("⚠️ **Relatório de Integridade da Planilha (Verifique Antes de Prosseguir)**", expanded=True):
@@ -331,7 +353,7 @@ if st.session_state['df_raw'] is not None:
         method = st.radio("Método:", ["🤖 Automático (OLS)", "✍️ Manual"], horizontal=True)
 
         # ======================================================
-        # LÓGICA DE CÁLCULO (AQUI FOI ALTERADO PARA INCLUIR MANUAL)
+        # LÓGICA DE CÁLCULO
         # ======================================================
         
         # MODO AUTOMÁTICO
@@ -351,7 +373,7 @@ if st.session_state['df_raw'] is not None:
                             st.session_state['last_results'] = res
                             st.session_state['chart_key'] += 1
         
-        # MODO MANUAL (ADICIONADO AQUI)
+        # MODO MANUAL
         else:
             st.markdown("#### 🔢 Entrada de Coeficientes")
             
@@ -417,7 +439,7 @@ if st.session_state['df_raw'] is not None:
                             st.session_state['chart_key'] += 1
 
         # ==============================================================================
-        # 3. RESULTADOS (ESTE BLOCO É O ORIGINAL QUE VOCÊ QUERIA DE VOLTA)
+        # 3. RESULTADOS
         # ==============================================================================
         results = st.session_state['last_results']
         
@@ -488,8 +510,3 @@ if st.session_state['df_raw'] is not None:
 else:
     st.title(f"Bem-vindo ao {APP_NAME}")
     st.info("Carregue um arquivo para começar.")
-
-
-
-
-
