@@ -289,18 +289,20 @@ if st.session_state['df_raw'] is not None:
             ---
             
             ### 🛠️ Operadores e Funções
-            O sistema aceita sintaxe padrão Python/Excel (em inglês):
+            O sistema aceita sintaxe padrão Python (em inglês):
             
-            | Tipo | Símbolo/Função | Exemplo de Uso |
+            | Tipo | Símbolo/Função | Observação Importante |
             | :--- | :--- | :--- |
             | **Soma/Subtração** | `+`, `-` | `b0 + b1*DAP` |
             | **Multiplicação** | `*` (Asterisco) | `b1 * HT` |
             | **Potência** | `**` (Não use `^`) | `DAP ** 2` (DAP ao quadrado) |
-            | **Logaritmo** | `ln()` ou `log()` | `ln(Y)` ou `log(DAP)` |
+            | **Logaritmo** | `ln()` ou `log()` | **Sempre Log Natural (Base e)**. |
             | **Exponencial** | `exp()` | `exp(b0 + b1*X)` |
             | **Raiz Quadrada** | `sqrt()` | `sqrt(DAP)` |
             
-            > **Nota:** No PryAI, tanto `ln()` quanto `log()` calculam o **logaritmo neperiano (base e)**.
+            > **Nota Técnica:** O PryAI utiliza o padrão científico mundial (**Log Natural**).
+            > * Se você comparar com coeficientes do Excel (Log Base 10), o $b_0$ (intercepto) será diferente.
+            > * Mas não se preocupe: **As estatísticas ($R^2$, Erro) e as Predições Finais são idênticas.**
             
             ---
             
@@ -483,4 +485,5 @@ if st.session_state['df_raw'] is not None:
 else:
     st.title(f"Bem-vindo ao {APP_NAME}")
     st.info("Carregue um arquivo para começar.")
+
 
