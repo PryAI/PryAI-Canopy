@@ -278,9 +278,49 @@ if st.session_state['df_raw'] is not None:
                 else:
                     st.warning("Nome e Equação necessários.")
 
-        with st.expander("📚 Guia de Sintaxe & Exemplos"):
+        with st.expander("📚 Guia de Sintaxe & Como Montar sua Equação", expanded=False):
             st.markdown("""
-            **Operadores:** `+`, `-`, `*`, `/`, `**` | **Funções:** `ln()`, `log()`, `exp()`, `sqrt()`
+            ### ⚠️ Regra de Ouro: Apelidos (Aliases)
+            O **PryAI** conecta sua equação aos dados através dos **Apelidos** que você definiu acima.
+            
+            * **Exatidão:** Se você apelidou o DAP de `dap_cm`, você **DEVE** escrever `dap_cm` na equação.
+            * **Erro Comum:** Se o apelido for `VOL123` e você escrever `log(volume)`, o sistema não encontrará os dados.
+            
+            ---
+            
+            ### 🛠️ Operadores e Funções
+            O sistema aceita sintaxe padrão Python/Excel (em inglês):
+            
+            | Tipo | Símbolo/Função | Exemplo de Uso |
+            | :--- | :--- | :--- |
+            | **Soma/Subtração** | `+`, `-` | `b0 + b1*DAP` |
+            | **Multiplicação** | `*` (Asterisco) | `b1 * HT` |
+            | **Potência** | `**` (Não use `^`) | `DAP ** 2` (DAP ao quadrado) |
+            | **Logaritmo** | `ln()` ou `log()` | `ln(Y)` ou `log(DAP)` |
+            | **Exponencial** | `exp()` | `exp(b0 + b1*X)` |
+            | **Raiz Quadrada** | `sqrt()` | `sqrt(DAP)` |
+            
+            > **Nota:** No PryAI, tanto `ln()` quanto `log()` calculam o **logaritmo neperiano (base e)**.
+            
+            ---
+            
+            ### 📋 Exemplos Práticos
+            Copie e cole para testar (ajuste os apelidos se necessário):
+            
+            **1. Modelo Linear Simples:**
+            ```
+            Y = b0 + b1 * DAP
+            ```
+            
+            **2. Schumacher-Hall (Logarítmico):**
+            ```
+            ln(Y) = b0 + b1*ln(DAP) + b2*ln(HT)
+            ```
+            
+            **3. Spurr (Variável Combinada):**
+            ```
+            Y = b0 + b1 * (DAP**2 * HT)
+            ```
             """)
 
         method = st.radio("Método:", ["🤖 Automático (OLS)", "✍️ Manual"], horizontal=True)
@@ -443,3 +483,4 @@ if st.session_state['df_raw'] is not None:
 else:
     st.title(f"Bem-vindo ao {APP_NAME}")
     st.info("Carregue um arquivo para começar.")
+
